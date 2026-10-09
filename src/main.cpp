@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Angle.hpp>
 #include <SFML/System/Clock.hpp>
@@ -12,24 +13,34 @@
 #include <iostream>
 #include <optional>
 
+namespace GlobalVar {
+const sf::Vector2u windowSize{800, 600};
+const sf::Vector2f playAreaSize{sf::Vector2f{500, 300}};
+const float ballRadius{10.f};
+} // namespace GlobalVar
+
 int main() {
-  sf::RenderWindow window(sf::VideoMode({800, 600}), "My Window");
+  sf::RenderWindow window(sf::VideoMode(GlobalVar::windowSize), "My Window");
   window.setFramerateLimit(60);
 
-  auto center{static_cast<sf::Vector2f>(window.getSize()) / 2.f};
+  auto center{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
+              GlobalVar::playAreaSize / 2.f};
+
+  auto ballCenter{center * 2.f};
 
   // Initialize play area
   sf::RectangleShape playArea;
-  playArea.setSize(sf::Vector2f{500, 300});
+  playArea.setSize(GlobalVar::playAreaSize);
   playArea.setFillColor(sf::Color::Black);
   playArea.setOutlineColor(sf::Color::White);
   playArea.setOutlineThickness(10.0);
-  playArea.setPosition(center - playArea.getSize() / 2.f);
+  playArea.setPosition(center);
 
   // Initialize Ball
-  sf::CircleShape ball(10.f);
+  sf::CircleShape ball(GlobalVar::ballRadius);
   ball.setFillColor(sf::Color::White);
   float speedOfBall{100.f};
+  ball.setPosition(ballCenter);
 
   sf::Clock clock;
 
@@ -47,8 +58,12 @@ int main() {
     // ready to be updated after
     float delta = clock.restart().asSeconds();
     // std::cout << delta;
+    sf::FloatRect boundingBox{playArea.getGlobalBounds()};
 
     ball.move({speedOfBall * delta, 0.f});
+    if (!boundingBox.contains(ball.getPosition())) {
+      speedOfBall *= -1;
+    }
 
     window.draw(playArea);
     window.draw(ball);
