@@ -3,11 +3,13 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/System/Angle.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
+#include <iostream>
 #include <optional>
 
 int main() {
@@ -25,8 +27,11 @@ int main() {
   playArea.setPosition(center - playArea.getSize() / 2.f);
 
   // Initialize Ball
-  sf::CircleShape ball(30.f);
+  sf::CircleShape ball(10.f);
   ball.setFillColor(sf::Color::White);
+  float speedOfBall{100.f};
+
+  sf::Clock clock;
 
   // Main loop
   while (window.isOpen()) {
@@ -40,6 +45,10 @@ int main() {
     // Called once every frame erase the last frame
     window.clear(sf::Color::Black);
     // ready to be updated after
+    float delta = clock.restart().asSeconds();
+    // std::cout << delta;
+
+    ball.move({speedOfBall * delta, 0.f});
 
     window.draw(playArea);
     window.draw(ball);
