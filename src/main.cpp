@@ -76,7 +76,11 @@ int main() {
     float delta = clock.restart().asSeconds();
 
     ball.move(speedOfBall);
-    if (!topBound.contains(ball.getPosition())) {
+    if (topBound.contains(ball.getPosition()) ||
+        bottomBound.contains(ball.getPosition())) {
+      speedOfBall.y *= -1;
+    } else if (rightBound.contains(ball.getPosition()) ||
+               leftBound.contains(ball.getPosition())) {
       speedOfBall.x *= -1;
     }
 
