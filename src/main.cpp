@@ -36,10 +36,27 @@ int main() {
   playArea.setOutlineThickness(10.0);
   playArea.setPosition(center);
 
+  // Walls with that can be hit lol
+  sf::Vector2f playAreaPos{playArea.getPosition()};
+  sf::Vector2f playAreaSize{playArea.getSize()};
+
+  sf::FloatRect topBound{playAreaPos, sf::Vector2f{playAreaSize.x, 10.f}};
+  sf::FloatRect bottomBound{
+      sf::Vector2f{playAreaPos.x, playAreaPos.y + playAreaSize.y},
+      sf::Vector2f{playAreaSize.x, 10.f}};
+  sf::FloatRect leftBound{playAreaPos, sf::Vector2f{10.f, playAreaSize.y}};
+  sf::FloatRect rightBound{
+      sf::Vector2f{playAreaPos.x + playAreaSize.x, playAreaPos.y},
+      sf::Vector2f{10.f, playAreaSize.y}};
+
+  sf::RectangleShape s_topBound{rightBound.size};
+  s_topBound.setFillColor(sf::Color::Red);
+  s_topBound.setPosition(rightBound.position);
+
   // Initialize Ball
   sf::CircleShape ball(GlobalVar::ballRadius);
   ball.setFillColor(sf::Color::White);
-  float speedOfBall{100.f};
+  sf::Vector2f speedOfBall{10.f, 10.f};
   ball.setPosition(ballCenter);
 
   sf::Clock clock;
@@ -53,20 +70,19 @@ int main() {
         window.close();
       }
     }
-    // Called once every frame erase the last frame
     window.clear(sf::Color::Black);
     // ready to be updated after
-    float delta = clock.restart().asSeconds();
-    // std::cout << delta;
-    sf::FloatRect boundingBox{playArea.getGlobalBounds()};
 
-    ball.move({speedOfBall * delta, 0.f});
-    if (!boundingBox.contains(ball.getPosition())) {
-      speedOfBall *= -1;
+    float delta = clock.restart().asSeconds();
+
+    ball.move(speedOfBall);
+    if (!topBound.contains(ball.getPosition())) {
+      speedOfBall.x *= -1;
     }
 
     window.draw(playArea);
     window.draw(ball);
+    window.draw(s_topBound);
 
     // // sf::CircleShape shape(50.f);
     // // shape.setFillColor(sf::Color(100, 250, 50));
