@@ -1,3 +1,5 @@
+#include "Ball.h"
+#include "Constants.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -12,12 +14,6 @@
 #include <SFML/Window/Window.hpp>
 #include <iostream>
 #include <optional>
-
-namespace GlobalVar {
-const sf::Vector2u windowSize{800, 600};
-const sf::Vector2f playAreaSize{sf::Vector2f{500, 300}};
-const float ballRadius{10.f};
-} // namespace GlobalVar
 
 int main() {
   sf::RenderWindow window(sf::VideoMode(GlobalVar::windowSize), "My Window");
@@ -49,24 +45,20 @@ int main() {
       sf::Vector2f{playAreaPos.x + playAreaSize.x, playAreaPos.y},
       sf::Vector2f{10.f, playAreaSize.y + 100.f}};
 
-  // sf::RectangleShape s_right{rightBound.size};
-  // s_right.setFillColor(sf::Color::Red);
-  // s_right.setPosition(rightBound.position);
-  // sf::RectangleShape s_left{leftBound.size};
-  // s_left.setFillColor(sf::Color::Red);
-  // s_left.setPosition(leftBound.position);
-  // sf::RectangleShape s_bottom{bottomBound.size};
-  // s_bottom.setFillColor(sf::Color::Red);
-  // s_bottom.setPosition(bottomBound.position);
-  // sf::RectangleShape s_top{topBound.size};
-  // s_top.setFillColor(sf::Color::Red);
-  // s_top.setPosition(topBound.position);
+  sf::RectangleShape s_right{rightBound.size};
+  s_right.setFillColor(sf::Color::Red);
+  s_right.setPosition(rightBound.position);
+  sf::RectangleShape s_left{leftBound.size};
+  s_left.setFillColor(sf::Color::Red);
+  s_left.setPosition(leftBound.position);
+  sf::RectangleShape s_bottom{bottomBound.size};
+  s_bottom.setFillColor(sf::Color::Red);
+  s_bottom.setPosition(bottomBound.position);
+  sf::RectangleShape s_top{topBound.size};
+  s_top.setFillColor(sf::Color::Red);
+  s_top.setPosition(topBound.position);
 
-  // Initialize Ball
-  sf::CircleShape ball(GlobalVar::ballRadius);
-  ball.setFillColor(sf::Color::White);
-  sf::Vector2f speedOfBall{5.f, 5.f};
-  ball.setPosition(ballCenter);
+  Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed, center};
 
   sf::Clock clock;
 
@@ -84,24 +76,26 @@ int main() {
 
     float delta = clock.restart().asSeconds();
 
-    ball.move(speedOfBall);
+    ball.move(ball.getSpeed());
     if (topBound.contains(ball.getPosition()) ||
         bottomBound.contains(ball.getPosition())) {
-      speedOfBall.y *= -1;
-      std::cout << "hit top/bot\n";
+      ball.flipSpeedY();
+      ball.increaseBallSpeed();
+      std::cout << "Hit top bottom\n";
     }
     if (rightBound.contains(ball.getPosition()) ||
         leftBound.contains(ball.getPosition())) {
-      speedOfBall.x *= -1;
-      std::cout << "hit right/left\n";
+      ball.flipSpeedX();
+      ball.increaseBallSpeed();
+      std::cout << "Hit sides\n";
     }
 
     window.draw(playArea);
     window.draw(ball);
-    // window.draw(s_top);
-    // window.draw(s_bottom);
-    // window.draw(s_left);
-    // window.draw(s_right);
+    window.draw(s_top);
+    window.draw(s_bottom);
+    window.draw(s_left);
+    window.draw(s_right);
 
     // // sf::CircleShape shape(50.f);
     // // shape.setFillColor(sf::Color(100, 250, 50));
