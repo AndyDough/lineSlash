@@ -16,6 +16,8 @@
 #include <optional>
 
 int main() {
+  float degrees{45.f};
+
   sf::RenderWindow window(sf::VideoMode(GlobalVar::windowSize), "My Window");
   window.setFramerateLimit(60);
 
@@ -80,13 +82,11 @@ int main() {
         bottomBound.contains(ball.getPosition())) {
       ball.flipSpeedY();
       ball.increaseBallSpeed();
-      std::cout << "Hit top bottom\n";
     }
     if (rightBound.contains(ball.getPosition()) ||
         leftBound.contains(ball.getPosition())) {
       ball.flipSpeedX();
       ball.increaseBallSpeed();
-      std::cout << "Hit sides\n";
     }
 
     window.draw(playArea);
@@ -96,15 +96,18 @@ int main() {
     window.draw(s_left);
     window.draw(s_right);
 
-    // // sf::CircleShape shape(50.f);
-    // // shape.setFillColor(sf::Color(100, 250, 50));
-    // sf::RectangleShape line({150.f, 5.f});
-    // line.setOrigin(line.getSize() / 2.f);
-    // line.setPosition({400.f, 300.f});
-    // line.rotate(sf::degrees(degrees));
-    // window.draw(line);
-    //
-    // ++degrees;
+    sf::RectangleShape line({150.f, 5.f});
+    line.setOrigin(line.getSize() / 2.f);
+    line.setPosition({400.f, 300.f});
+    line.rotate(sf::degrees(degrees));
+
+    if (line.getGlobalBounds().contains(ball.getPosition())) {
+      std::cout << "ball hit line\n";
+    }
+
+    window.draw(line);
+
+    ++degrees;
 
     window.display();
   }
