@@ -21,11 +21,17 @@ public:
   void flipSpeedY() { m_speed.y *= -1; }
 
   void increaseBallSpeed() {
-    m_speed.x = std::min(std::max(m_speed.x + GlobalVar::speedIncrease,
+    m_speed.x = std::min(std::max(m_speed.x * GlobalVar::speedIncrease,
                                   -GlobalVar::maxBallSpeed),
                          GlobalVar::maxBallSpeed);
-    m_speed.y = std::min(std::max(m_speed.y + GlobalVar::speedIncrease,
+    m_speed.y = std::min(std::max(m_speed.y * GlobalVar::speedIncrease,
                                   -GlobalVar::maxBallSpeed),
                          GlobalVar::maxBallSpeed);
+    // m_speed.x = std::min(std::max(m_speed.x + GlobalVar::speedIncrease,
+    //                               -GlobalVar::maxBallSpeed),
+    //                      GlobalVar::maxBallSpeed);
+    // m_speed.y = std::min(std::max(m_speed.y + GlobalVar::speedIncrease,
+    //                               -GlobalVar::maxBallSpeed),
+    //                      GlobalVar::maxBallSpeed);
   }
 };

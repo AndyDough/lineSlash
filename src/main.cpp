@@ -22,8 +22,6 @@ int main() {
   auto center{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
               GlobalVar::playAreaSize / 2.f};
 
-  auto ballCenter{center * 2.f};
-
   // Initialize play area
   sf::RectangleShape playArea;
   playArea.setSize(GlobalVar::playAreaSize);
@@ -58,7 +56,8 @@ int main() {
   s_top.setFillColor(sf::Color::Red);
   s_top.setPosition(topBound.position);
 
-  Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed, center};
+  Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
+            (center * 2.f)};
 
   sf::Clock clock;
 
