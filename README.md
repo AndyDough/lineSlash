@@ -9,7 +9,8 @@ roadmap:
   [x] 2. Goals draw a line that spins an a circle
   [x] 3. draw walls that act as boundaries
   [x] 4. make a ball bounce around in the boundaries
+  [x] 5. Have the ball bounce in different directions
 
-  [] 5. Have the ball bounce in different directions
   [] 6. Increase the ball's speed over time
+  [] 7. Start on Moving line mechanics
 
