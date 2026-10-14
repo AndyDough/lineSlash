@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "Constants.h"
+#include "Player.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -45,18 +46,18 @@ int main() {
       sf::Vector2f{playAreaPos.x + playAreaSize.x, playAreaPos.y},
       sf::Vector2f{10.f, playAreaSize.y + 100.f}};
 
-  sf::RectangleShape s_right{rightBound.size};
-  s_right.setFillColor(sf::Color::Red);
-  s_right.setPosition(rightBound.position);
-  sf::RectangleShape s_left{leftBound.size};
-  s_left.setFillColor(sf::Color::Red);
-  s_left.setPosition(leftBound.position);
-  sf::RectangleShape s_bottom{bottomBound.size};
-  s_bottom.setFillColor(sf::Color::Red);
-  s_bottom.setPosition(bottomBound.position);
-  sf::RectangleShape s_top{topBound.size};
-  s_top.setFillColor(sf::Color::Red);
-  s_top.setPosition(topBound.position);
+  // sf::RectangleShape s_right{rightBound.size};
+  // s_right.setFillColor(sf::Color::Red);
+  // s_right.setPosition(rightBound.position);
+  // sf::RectangleShape s_left{leftBound.size};
+  // s_left.setFillColor(sf::Color::Red);
+  // s_left.setPosition(leftBound.position);
+  // sf::RectangleShape s_bottom{bottomBound.size};
+  // s_bottom.setFillColor(sf::Color::Red);
+  // s_bottom.setPosition(bottomBound.position);
+  // sf::RectangleShape s_top{topBound.size};
+  // s_top.setFillColor(sf::Color::Red);
+  // s_top.setPosition(topBound.position);
 
   Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
             (center * 2.f)};
@@ -96,10 +97,19 @@ int main() {
     // window.draw(s_left);
     // window.draw(s_right);
 
-    sf::RectangleShape line({150.f, 5.f});
-    line.setOrigin(line.getSize() / 2.f);
-    line.setPosition({400.f, 300.f});
+    Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f});
     line.rotate(sf::degrees(degrees));
+
+    if (topBound.contains(line.getTip()) ||
+        bottomBound.contains(line.getTip())) {
+      line.pivot();
+      std::cout << "tip hit wall\n";
+    }
+    if (rightBound.contains(line.getTip()) ||
+        leftBound.contains(line.getTip())) {
+      line.pivot();
+      std::cout << "tip hit wall\n";
+    }
 
     if (line.getGlobalBounds().contains(ball.getPosition())) {
       std::cout << "ball hit line\n";

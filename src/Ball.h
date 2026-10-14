@@ -21,6 +21,7 @@ public:
   void flipSpeedY() { m_speed.y *= -1; }
 
   void increaseBallSpeed() {
+    // Learn about std::clamp instead of using std::min(std::max(x,y),x);
     m_speed.x = std::min(std::max(m_speed.x * GlobalVar::speedIncrease,
                                   -GlobalVar::maxBallSpeed),
                          GlobalVar::maxBallSpeed);
