@@ -12,5 +12,8 @@ roadmap:
   [x] 5. Have the ball bounce in different directions
   [x] 6. Increase the ball's speed over time
   [ ] 7. Define player class
+          - check bounds against player or other way around
+          - fix rotation change
+          - fix pivot function
   [x] 8. Have ball detect when it hits line
 

@@ -12,7 +12,6 @@ private:
   int m_score{0};
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
-  sf::FloatRect m_tipHitbox;
 
 public:
   Player(const sf::Vector2f &startingPos)
@@ -20,14 +19,14 @@ public:
     this->setPosition(startingPos);
     m_endOfLine = {this->getPosition().x + GlobalVar::lineSize.x,
                    this->getPosition().y};
-    m_tipHitbox = {m_endOfLine, {20.f, 20.f}};
   }
 
-  sf::FloatRect &getTipHitBox() { return m_tipHitbox; }
+  sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
   void pivot() {
-    m_endOfLine = this->getPosition();
-    this->setPosition(m_endOfLine);
+    auto temp{this->getPosition()};
+    this->setPosition(m_endOfLine); // This is probably the problem
+    m_endOfLine = temp;
   }
 
   void rotate(sf::Angle angle) {
@@ -36,7 +35,6 @@ public:
                        GlobalVar::lineSize.x * std::cos(angle.asRadians()),
                    this->getPosition().y +
                        GlobalVar::lineSize.x * std::sin(angle.asRadians())};
-    m_tipHitbox.position = m_endOfLine;
   }
 };
 
