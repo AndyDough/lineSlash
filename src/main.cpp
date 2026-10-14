@@ -100,13 +100,21 @@ int main() {
     Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f});
     line.rotate(sf::degrees(degrees));
 
-    if (topBound.contains(line.getTip()) ||
-        bottomBound.contains(line.getTip())) {
+    // Test Hitbox stuff
+    sf::RectangleShape s_testBox{line.getTipHitBox().size};
+    s_testBox.setFillColor(sf::Color::Red);
+    s_testBox.setPosition(line.getTipHitBox().position);
+    // sf::RectangleShape s_right{rightBound.size};
+    // s_right.setFillColor(sf::Color::Red);
+    // s_right.setPosition(rightBound.position);
+
+    if (topBound.contains(line.getTipHitBox().position) ||
+        bottomBound.contains(line.getTipHitBox().position)) {
       line.pivot();
       std::cout << "tip hit wall\n";
     }
-    if (rightBound.contains(line.getTip()) ||
-        leftBound.contains(line.getTip())) {
+    if (rightBound.contains(line.getTipHitBox().position) ||
+        leftBound.contains(line.getTipHitBox().position)) {
       line.pivot();
       std::cout << "tip hit wall\n";
     }
@@ -116,6 +124,7 @@ int main() {
     }
 
     window.draw(line);
+    window.draw(s_testBox);
 
     ++degrees;
 

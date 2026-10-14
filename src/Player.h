@@ -12,28 +12,31 @@ private:
   int m_score{0};
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
+  sf::FloatRect m_tipHitbox;
 
 public:
-  Player(const sf::Vector2f &startngPos)
+  Player(const sf::Vector2f &startingPos)
       : sf::RectangleShape(GlobalVar::lineSize) {
-    m_endOfLine = {this->getOrigin().x + GlobalVar::lineSize.x,
-                   this->getOrigin().y + GlobalVar::lineSize.y};
-    this->setPosition(startngPos);
+    this->setPosition(startingPos);
+    m_endOfLine = {this->getPosition().x + GlobalVar::lineSize.x,
+                   this->getPosition().y};
+    m_tipHitbox = {m_endOfLine, {20.f, 20.f}};
   }
 
-  sf::Vector2f getTip() const { return m_endOfLine; }
+  sf::FloatRect &getTipHitBox() { return m_tipHitbox; }
 
   void pivot() {
-    m_endOfLine = this->getOrigin();
-    this->setOrigin(m_endOfLine);
+    m_endOfLine = this->getPosition();
+    this->setPosition(m_endOfLine);
   }
 
   void rotate(sf::Angle angle) {
     this->sf::Transformable::rotate(angle);
-    m_endOfLine = {this->getOrigin().x +
+    m_endOfLine = {this->getPosition().x +
                        GlobalVar::lineSize.x * std::cos(angle.asRadians()),
-                   this->getOrigin().y +
-                       GlobalVar::lineSize.y * std::sin(angle.asRadians())};
+                   this->getPosition().y +
+                       GlobalVar::lineSize.x * std::sin(angle.asRadians())};
+    m_tipHitbox.position = m_endOfLine;
   }
 };
 
