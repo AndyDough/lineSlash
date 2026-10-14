@@ -91,10 +91,10 @@ int main() {
 
     window.draw(playArea);
     window.draw(ball);
-    window.draw(s_top);
-    window.draw(s_bottom);
-    window.draw(s_left);
-    window.draw(s_right);
+    // window.draw(s_top);
+    // window.draw(s_bottom);
+    // window.draw(s_left);
+    // window.draw(s_right);
 
     sf::RectangleShape line({150.f, 5.f});
     line.setOrigin(line.getSize() / 2.f);

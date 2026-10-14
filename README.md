@@ -11,6 +11,6 @@ roadmap:
   [x] 4. make a ball bounce around in the boundaries
   [x] 5. Have the ball bounce in different directions
   [x] 6. Increase the ball's speed over time
-
-  [] 7. Start on Moving line mechanics
+  [ ] 7. Define player class
+  [x] 8. Have ball detect when it hits line
 
