@@ -61,6 +61,8 @@ int main() {
 
   Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
             (center * 2.f)};
+  sf::RectangleShape s_ballHitbox{ball.getHitbox().size};
+  s_ballHitbox.setFillColor(sf::Color::Red);
 
   sf::Clock clock;
 
@@ -81,13 +83,24 @@ int main() {
     float delta = clock.restart().asSeconds();
 
     ball.move(ball.getSpeed());
-    if (topBound.contains(ball.getPosition()) ||
-        bottomBound.contains(ball.getPosition())) {
+    s_ballHitbox.setPosition(ball.getPosition());
+    if (const std::optional intersectionTop =
+            topBound.findIntersection(ball.getHitbox())) {
       ball.flipSpeedY();
       ball.increaseBallSpeed();
     }
-    if (rightBound.contains(ball.getPosition()) ||
-        leftBound.contains(ball.getPosition())) {
+    if (const std::optional intersectionBottom =
+            bottomBound.findIntersection(ball.getHitbox())) {
+      ball.flipSpeedY();
+      ball.increaseBallSpeed();
+    }
+    if (const std::optional intersectionRight =
+            rightBound.findIntersection(ball.getHitbox())) {
+      ball.flipSpeedX();
+      ball.increaseBallSpeed();
+    }
+    if (const std::optional intersectionLeft =
+            leftBound.findIntersection(ball.getHitbox())) {
       ball.flipSpeedX();
       ball.increaseBallSpeed();
     }

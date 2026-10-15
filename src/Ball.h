@@ -2,37 +2,34 @@
 #include "Constants.h"
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <algorithm>
 
 class Ball : public sf::CircleShape {
 private:
   sf::Vector2f m_speed;
   sf::Vector2f m_startingPos;
+  sf::FloatRect m_hitbox;
 
 public:
   Ball(float radius, float speed, sf::Vector2f startPos)
-      : sf::CircleShape(radius), m_speed{speed, speed} {
+      : sf::CircleShape(radius), m_speed{speed, speed},
+        m_hitbox(m_startingPos, {radius * 2, radius * 2}) {
     this->setPosition(startPos);
   }
 
   sf::Vector2f &getSpeed() { return m_speed; };
 
+  sf::FloatRect &getHitbox() { return m_hitbox; }
+
   void flipSpeedX() { m_speed.x *= -1; }
   void flipSpeedY() { m_speed.y *= -1; }
 
   void increaseBallSpeed() {
-    // Learn about std::clamp instead of using std::min(std::max(x,y),x);
-    m_speed.x = std::min(std::max(m_speed.x * GlobalVar::speedIncrease,
-                                  -GlobalVar::maxBallSpeed),
-                         GlobalVar::maxBallSpeed);
-    m_speed.y = std::min(std::max(m_speed.y * GlobalVar::speedIncrease,
-                                  -GlobalVar::maxBallSpeed),
-                         GlobalVar::maxBallSpeed);
-    // m_speed.x = std::min(std::max(m_speed.x + GlobalVar::speedIncrease,
-    //                               -GlobalVar::maxBallSpeed),
-    //                      GlobalVar::maxBallSpeed);
-    // m_speed.y = std::min(std::max(m_speed.y + GlobalVar::speedIncrease,
-    //                               -GlobalVar::maxBallSpeed),
-    //                      GlobalVar::maxBallSpeed);
+    m_speed.x = std::clamp(m_speed.x * GlobalVar::speedIncrease,
+                           -GlobalVar::maxBallSpeed, GlobalVar::maxBallSpeed);
+    m_speed.y = std::clamp(m_speed.y * GlobalVar::speedIncrease,
+                           -GlobalVar::maxBallSpeed, GlobalVar::maxBallSpeed);
   }
 };
