@@ -10,18 +10,15 @@ class Ball : public sf::CircleShape {
 private:
   sf::Vector2f m_speed;
   sf::Vector2f m_startingPos;
-  sf::FloatRect m_hitbox;
 
 public:
   Ball(float radius, float speed, sf::Vector2f startPos)
-      : sf::CircleShape(radius), m_speed{speed, speed},
-        m_hitbox(m_startingPos, {radius * 2, radius * 2}) {
+      : sf::CircleShape(radius), m_speed{speed, speed} {
     this->setPosition(startPos);
   }
 
   sf::Vector2f &getSpeed() { return m_speed; };
 
-  sf::FloatRect &getHitbox() { return m_hitbox; }
 
   void flipSpeedX() { m_speed.x *= -1; }
   void flipSpeedY() { m_speed.y *= -1; }
