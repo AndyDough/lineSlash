@@ -17,8 +17,6 @@
 #include <optional>
 
 int main() {
-  float degrees{45.f};
-
   sf::RenderWindow window(sf::VideoMode(GlobalVar::windowSize), "My Window");
   window.setFramerateLimit(60);
 
@@ -63,6 +61,8 @@ int main() {
             (center * 2.f)};
   sf::RectangleShape s_ballHitbox{ball.getHitbox().size};
   s_ballHitbox.setFillColor(sf::Color::Red);
+
+  Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f}, 45.f);
 
   sf::Clock clock;
 
@@ -112,17 +112,14 @@ int main() {
     window.draw(s_left);
     window.draw(s_right);
 
-    Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f});
-    line.rotate(sf::degrees(degrees));
-
     if (topBound.contains(line.getTipHitBox()) ||
         bottomBound.contains(line.getTipHitBox())) {
-      turnClockWise = !turnClockWise;
+      line.swapRotation();
       std::cout << "tip hit wall\n";
     }
     if (rightBound.contains(line.getTipHitBox()) ||
         leftBound.contains(line.getTipHitBox())) {
-      turnClockWise = !turnClockWise;
+      line.swapRotation();
       std::cout << "tip hit wall\n";
     }
 
@@ -130,9 +127,9 @@ int main() {
       std::cout << "ball hit line\n";
     }
 
+    line.updateLine();
+    line.rotate();
     window.draw(line);
-
-    (turnClockWise) ? --degrees : ++degrees;
 
     window.display();
   }

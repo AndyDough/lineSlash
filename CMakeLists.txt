@@ -11,4 +11,10 @@ add_executable(lineSlash
     src/main.cpp
 )
 
+add_compile_options(
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
 target_link_libraries(lineSlash PRIVATE SFML::Graphics)

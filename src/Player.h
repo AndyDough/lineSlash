@@ -6,20 +6,35 @@
 #include <SFML/System/Angle.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <cmath>
+#include <iostream>
 
 class Player : public sf::RectangleShape {
 private:
   int m_score{0};
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
+  float m_degree;
+  bool m_turnClockwise{true};
 
 public:
-  Player(const sf::Vector2f &startingPos)
-      : sf::RectangleShape(GlobalVar::lineSize) {
+  Player(const sf::Vector2f &startingPos, float startingDegrees)
+      : sf::RectangleShape(GlobalVar::lineSize), m_degree{startingDegrees} {
     this->setPosition(startingPos);
     m_endOfLine = {this->getPosition().x + GlobalVar::lineSize.x,
                    this->getPosition().y};
   }
+
+  float getDegree() { return m_degree; }
+
+  void updateLine() {
+    if (m_turnClockwise) {
+      ++m_degree;
+    } else {
+      --m_degree;
+    }
+  }
+
+  void swapRotation() { m_turnClockwise = !m_turnClockwise; }
 
   sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
@@ -29,12 +44,14 @@ public:
     m_endOfLine = temp;
   }
 
-  void rotate(sf::Angle angle) {
-    this->sf::Transformable::rotate(angle);
+  void rotate() {
+    this->sf::Transformable::rotate(sf::degrees(m_degree));
     m_endOfLine = {this->getPosition().x +
-                       GlobalVar::lineSize.x * std::cos(angle.asRadians()),
+                       GlobalVar::lineSize.x *
+                           std::cos(sf::radians(m_degree).asRadians()),
                    this->getPosition().y +
-                       GlobalVar::lineSize.x * std::sin(angle.asRadians())};
+                       GlobalVar::lineSize.x *
+                           std::sin(sf::radians(m_degree).asRadians())};
   }
 };
 
