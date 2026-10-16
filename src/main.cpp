@@ -82,23 +82,13 @@ int main() {
 
     ball.move(ball.getSpeed());
     s_ballHitbox.setPosition(ball.getPosition());
-    if (const std::optional intersectionTop =
-            topBound.findIntersection(ball.getHitbox())) {
+    if (topBound.findIntersection(ball.getGlobalBounds()) ||
+        bottomBound.findIntersection(ball.getGlobalBounds())) {
       ball.flipSpeedY();
       ball.increaseBallSpeed();
     }
-    if (const std::optional intersectionBottom =
-            bottomBound.findIntersection(ball.getHitbox())) {
-      ball.flipSpeedY();
-      ball.increaseBallSpeed();
-    }
-    if (const std::optional intersectionRight =
-            rightBound.findIntersection(ball.getHitbox())) {
-      ball.flipSpeedX();
-      ball.increaseBallSpeed();
-    }
-    if (const std::optional intersectionLeft =
-            leftBound.findIntersection(ball.getHitbox())) {
+    if (rightBound.findIntersection(ball.getGlobalBounds()) ||
+        leftBound.findIntersection(ball.getGlobalBounds())) {
       ball.flipSpeedX();
       ball.increaseBallSpeed();
     }
@@ -110,19 +100,17 @@ int main() {
     window.draw(s_left);
     window.draw(s_right);
 
-    if (topBound.contains(line.getTipHitBox()) ||
-        bottomBound.contains(line.getTipHitBox())) {
+    if (topBound.findIntersection(line.getGlobalBounds()) ||
+        bottomBound.findIntersection(line.getGlobalBounds())) {
       line.swapRotation();
-      //std::cout << "tip hit wall\n";
     }
     if (rightBound.findIntersection(line.getGlobalBounds()) ||
         leftBound.findIntersection(line.getGlobalBounds())) {
       line.swapRotation();
-      //std::cout << "tip hit wall\n";
     }
 
-    if(line.getGlobalBounds().findIntersection(ball.getGlobalBounds())) {
-      //std::cout << "ball hit line\n";
+    if (line.getGlobalBounds().findIntersection(ball.getGlobalBounds())) {
+      // std::cout << "ball hit line\n";
       ball.flipSpeedX();
     }
     line.rotate();
