@@ -26,14 +26,6 @@ public:
 
   float getDegree() { return m_degree; }
 
-  void updateLine() {
-    if (m_turnClockwise) {
-      ++m_degree;
-    } else {
-      --m_degree;
-    }
-  }
-
   void swapRotation() { m_turnClockwise = !m_turnClockwise; }
 
   sf::Vector2f &getTipHitBox() { return m_endOfLine; }
@@ -45,7 +37,12 @@ public:
   }
 
   void rotate() {
-    this->sf::Transformable::rotate(sf::degrees(m_degree));
+    if (m_turnClockwise) {
+      this->sf::Transformable::rotate(sf::degrees(1.f));
+    } else {
+      this->sf::Transformable::rotate(sf::degrees(-1.f));
+    }
+    
     m_endOfLine = {this->getPosition().x +
                        GlobalVar::lineSize.x *
                            std::cos(sf::radians(m_degree).asRadians()),

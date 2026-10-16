@@ -66,8 +66,6 @@ int main() {
 
   sf::Clock clock;
 
-  bool turnClockWise{true};
-
   // Main loop
   while (window.isOpen()) {
 
@@ -115,19 +113,18 @@ int main() {
     if (topBound.contains(line.getTipHitBox()) ||
         bottomBound.contains(line.getTipHitBox())) {
       line.swapRotation();
-      std::cout << "tip hit wall\n";
+      //std::cout << "tip hit wall\n";
     }
-    if (rightBound.contains(line.getTipHitBox()) ||
-        leftBound.contains(line.getTipHitBox())) {
+    if (rightBound.findIntersection(line.getGlobalBounds()) ||
+        leftBound.findIntersection(line.getGlobalBounds())) {
       line.swapRotation();
-      std::cout << "tip hit wall\n";
+      //std::cout << "tip hit wall\n";
     }
 
-    if (line.getGlobalBounds().contains(ball.getPosition())) {
-      std::cout << "ball hit line\n";
+    if(line.getGlobalBounds().findIntersection(ball.getGlobalBounds())) {
+      //std::cout << "ball hit line\n";
+      ball.flipSpeedX();
     }
-
-    line.updateLine();
     line.rotate();
     window.draw(line);
 
