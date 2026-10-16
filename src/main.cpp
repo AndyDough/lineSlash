@@ -59,8 +59,6 @@ int main() {
 
   Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
             (center * 2.f)};
-  sf::RectangleShape s_ballHitbox{ball.getHitbox().size};
-  s_ballHitbox.setFillColor(sf::Color::Red);
 
   Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f}, 45.f);
 
@@ -81,7 +79,6 @@ int main() {
     float delta = clock.restart().asSeconds();
 
     ball.move(ball.getSpeed());
-    s_ballHitbox.setPosition(ball.getPosition());
     if (topBound.findIntersection(ball.getGlobalBounds()) ||
         bottomBound.findIntersection(ball.getGlobalBounds())) {
       ball.flipSpeedY();
