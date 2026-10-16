@@ -7,6 +7,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <cmath>
 #include <iostream>
+#include <utility>
 
 class Player : public sf::RectangleShape {
 private:
@@ -31,24 +32,44 @@ public:
   sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
   void pivot() {
-    auto temp{this->getPosition()};
-    this->setPosition(m_endOfLine); // This is probably the problem
-    m_endOfLine = temp;
+    m_degree = sf::radians(std::atan2(this->getPosition().y - m_endOfLine.y,
+                                      this->getPosition().x - m_endOfLine.x))
+                   .asDegrees();
+
+    this->sf::Transformable::rotate(sf::degrees(m_degree));
+    this->setPosition(m_endOfLine);
+
+    std::cout << "Pivoted on: " << m_degree << '\n';
+    swapRotation();
+
+    m_endOfLine = {this->getPosition().x +
+                       GlobalVar::lineSize.x *
+                           std::cos(sf::degrees(m_degree).asRadians()),
+                   this->getPosition().y +
+                       GlobalVar::lineSize.x *
+                           std::sin(sf::degrees(m_degree).asRadians())};
+
+    // auto temp{this->getPosition()};
+    // this->setPosition(m_endOfLine);
+    // m_endOfLine = temp;
   }
 
   void rotate() {
     if (m_turnClockwise) {
       this->sf::Transformable::rotate(sf::degrees(1.f));
+      ++m_degree;
     } else {
       this->sf::Transformable::rotate(sf::degrees(-1.f));
+      --m_degree;
     }
-    
+    std::cout << m_degree << '\n';
+
     m_endOfLine = {this->getPosition().x +
                        GlobalVar::lineSize.x *
-                           std::cos(sf::radians(m_degree).asRadians()),
+                           std::cos(sf::degrees(m_degree).asRadians()),
                    this->getPosition().y +
                        GlobalVar::lineSize.x *
-                           std::sin(sf::radians(m_degree).asRadians())};
+                           std::sin(sf::degrees(m_degree).asRadians())};
   }
 };
 

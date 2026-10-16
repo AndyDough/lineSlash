@@ -60,7 +60,7 @@ int main() {
   Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
             (center * 2.f)};
 
-  Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f}, 45.f);
+  Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f}, 0.f);
 
   sf::Clock clock;
 
@@ -72,7 +72,15 @@ int main() {
       if (event->is<sf::Event::Closed>()) {
         window.close();
       }
+      if (const auto *mouseButtonPressed =
+              event->getIf<sf::Event::MouseButtonPressed>()) {
+        if (mouseButtonPressed->button == sf::Mouse::Button::Left) {
+          std::cout << "the right button was pressed" << std::endl;
+          line.pivot();
+        }
+      }
     }
+
     window.clear(sf::Color::Black);
     // ready to be updated after
 
