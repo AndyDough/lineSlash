@@ -60,7 +60,7 @@ int main() {
   Ball ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
             (center * 2.f)};
 
-  Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f}, 0.f);
+  Player line({playAreaPos.x + 20.f, playAreaPos.y * 2.f});
 
   sf::Clock clock;
 

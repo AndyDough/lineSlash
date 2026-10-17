@@ -14,40 +14,44 @@ private:
   int m_score{0};
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
-  float m_degree;
+  float degree;
   bool m_turnClockwise{true};
 
 public:
-  Player(const sf::Vector2f &startingPos, float startingDegrees)
-      : sf::RectangleShape(GlobalVar::lineSize), m_degree{startingDegrees} {
+  Player(const sf::Vector2f &startingPos)
+      : sf::RectangleShape(GlobalVar::lineSize) {
     this->setPosition(startingPos);
     m_endOfLine = {this->getPosition().x + GlobalVar::lineSize.x,
                    this->getPosition().y};
   }
-
-  float getDegree() { return m_degree; }
 
   void swapRotation() { m_turnClockwise = !m_turnClockwise; }
 
   sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
   void pivot() {
-    m_degree = sf::radians(std::atan2(this->getPosition().y - m_endOfLine.y,
-                                      this->getPosition().x - m_endOfLine.x))
-                   .asDegrees();
+    
+    float degree = getRotation().asDegrees();
 
-    this->sf::Transformable::rotate(sf::degrees(m_degree));
+    if(degree >= 180) degree -= 180.f;
+    else  degree += 180.f;
+    setRotation(sf::degrees(degree));
+
+    std::cout 
+      << "Pivoted on: current_degrees: "<< getRotation().asDegrees() 
+      <<", degrees: " << degree
+      << ", m_endofline: " << m_endOfLine.x << ", " << m_endOfLine.y << '\n';
+
     this->setPosition(m_endOfLine);
 
-    std::cout << "Pivoted on: " << m_degree << '\n';
     swapRotation();
 
     m_endOfLine = {this->getPosition().x +
                        GlobalVar::lineSize.x *
-                           std::cos(sf::degrees(m_degree).asRadians()),
+                           std::cos(getRotation().asRadians()),
                    this->getPosition().y +
                        GlobalVar::lineSize.x *
-                           std::sin(sf::degrees(m_degree).asRadians())};
+                           std::sin(getRotation().asRadians())};
 
     // auto temp{this->getPosition()};
     // this->setPosition(m_endOfLine);
@@ -57,19 +61,17 @@ public:
   void rotate() {
     if (m_turnClockwise) {
       this->sf::Transformable::rotate(sf::degrees(1.f));
-      ++m_degree;
     } else {
       this->sf::Transformable::rotate(sf::degrees(-1.f));
-      --m_degree;
     }
-    std::cout << m_degree << '\n';
+    //std::cout << degree << " " << this->getRotation().asDegrees() << '\n';
 
     m_endOfLine = {this->getPosition().x +
                        GlobalVar::lineSize.x *
-                           std::cos(sf::degrees(m_degree).asRadians()),
+                           std::cos(getRotation().asRadians()),
                    this->getPosition().y +
                        GlobalVar::lineSize.x *
-                           std::sin(sf::degrees(m_degree).asRadians())};
+                           std::sin(getRotation().asRadians())};
   }
 };
 
