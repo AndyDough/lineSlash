@@ -15,6 +15,7 @@ private:
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
   bool m_turnClockwise{true};
+  int m_IFrames{0};
 
 public:
   Player(const sf::Vector2f &startingPos)
@@ -27,6 +28,17 @@ public:
   void swapRotation() { m_turnClockwise = !m_turnClockwise; }
 
   sf::Vector2f &getTipHitBox() { return m_endOfLine; }
+
+  void procIFrames() { m_IFrames = 20; }
+
+  bool checkIniviciblity() {
+    if (m_IFrames > 0) {
+      --m_IFrames;
+      return true;
+      std::cout << "I'm invincible\n";
+    }
+    return false;
+  }
 
   void pivot() {
 
@@ -59,9 +71,9 @@ public:
 
   void rotate() {
     if (m_turnClockwise) {
-      this->sf::Transformable::rotate(sf::degrees(1.f));
+      this->sf::Transformable::rotate(sf::degrees(5.f));
     } else {
-      this->sf::Transformable::rotate(sf::degrees(-1.f));
+      this->sf::Transformable::rotate(sf::degrees(-5.f));
     }
     // std::cout << degree << " " << this->getRotation().asDegrees() << '\n';
 

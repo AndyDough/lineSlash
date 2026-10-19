@@ -35,14 +35,16 @@ int main() {
   sf::Vector2f playAreaPos{playArea.getPosition()};
   sf::Vector2f playAreaSize{playArea.getSize()};
 
-  sf::FloatRect topBound{playAreaPos, sf::Vector2f{playAreaSize.x, 10.f}};
+  sf::FloatRect topBound{{playAreaPos.x - 10.f, playAreaPos.y - 10.f},
+                         sf::Vector2f{playAreaSize.x + 20.f, 10.f}};
   sf::FloatRect bottomBound{
       sf::Vector2f{playAreaPos.x, playAreaPos.y + playAreaSize.y},
-      sf::Vector2f{playAreaSize.x + 100.f, 10.f}};
-  sf::FloatRect leftBound{playAreaPos, sf::Vector2f{10.f, playAreaSize.y}};
+      sf::Vector2f{playAreaSize.x + 10.f, 10.f}};
+  sf::FloatRect leftBound{{playAreaPos.x - 10.f, playAreaPos.y},
+                          sf::Vector2f{10.f, playAreaSize.y + 10.f}};
   sf::FloatRect rightBound{
       sf::Vector2f{playAreaPos.x + playAreaSize.x, playAreaPos.y},
-      sf::Vector2f{10.f, playAreaSize.y + 100.f}};
+      sf::Vector2f{10.f, playAreaSize.y + 10.f}};
 
   sf::RectangleShape s_right{rightBound.size};
   s_right.setFillColor(sf::Color::Red);
@@ -105,6 +107,7 @@ int main() {
     window.draw(s_left);
     window.draw(s_right);
 
+    // NOTE:: fix bug where line gets stuck in boundaries
     if (topBound.findIntersection(line.getGlobalBounds()) ||
         bottomBound.findIntersection(line.getGlobalBounds())) {
       line.swapRotation();
@@ -114,9 +117,13 @@ int main() {
       line.swapRotation();
     }
 
-    if (line.getGlobalBounds().findIntersection(ball.getGlobalBounds())) {
-      // std::cout << "ball hit line\n";
-      ball.flipSpeedX();
+    if (!line.checkIniviciblity()) {
+      if (line.getGlobalBounds().findIntersection(ball.getGlobalBounds())) {
+        std::cout << "ball hit line\n";
+        line.procIFrames();
+        ball.flipSpeedX(); // Finicky could instead of bouncy just explode
+                           // line/player
+      }
     }
     line.rotate();
     window.draw(line);
