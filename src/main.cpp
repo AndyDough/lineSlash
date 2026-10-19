@@ -108,12 +108,12 @@ int main() {
     window.draw(s_right);
 
     // NOTE:: fix bug where line gets stuck in boundaries
-    if (topBound.findIntersection(line.getGlobalBounds()) ||
-        bottomBound.findIntersection(line.getGlobalBounds())) {
+    if (topBound.contains(line.getTipHitBox()) ||
+        bottomBound.contains(line.getTipHitBox())) {
       line.swapRotation();
     }
-    if (rightBound.findIntersection(line.getGlobalBounds()) ||
-        leftBound.findIntersection(line.getGlobalBounds())) {
+    if (rightBound.contains(line.getTipHitBox()) ||
+        leftBound.contains(line.getTipHitBox())) {
       line.swapRotation();
     }
 

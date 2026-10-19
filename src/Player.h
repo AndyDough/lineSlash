@@ -27,7 +27,7 @@ public:
 
   void swapRotation() { m_turnClockwise = !m_turnClockwise; }
 
-  sf::Vector2f &getTipHitBox() { return m_endOfLine; }
+  const sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
   void procIFrames() { m_IFrames = 20; }
 
