@@ -14,7 +14,6 @@ private:
   int m_score{0};
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
-  float degree;
   bool m_turnClockwise{true};
 
 public:
@@ -30,28 +29,28 @@ public:
   sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
   void pivot() {
-    
+
     float degree = getRotation().asDegrees();
 
-    if(degree >= 180) degree -= 180.f;
-    else  degree += 180.f;
+    if (degree >= 180)
+      degree -= 180.f;
+    else
+      degree += 180.f;
     setRotation(sf::degrees(degree));
 
-    std::cout 
-      << "Pivoted on: current_degrees: "<< getRotation().asDegrees() 
-      <<", degrees: " << degree
-      << ", m_endofline: " << m_endOfLine.x << ", " << m_endOfLine.y << '\n';
+    std::cout << "Pivoted on: current_degrees: " << getRotation().asDegrees()
+              << ", degrees: " << degree << ", m_endofline: " << m_endOfLine.x
+              << ", " << m_endOfLine.y << '\n';
 
     this->setPosition(m_endOfLine);
 
     swapRotation();
 
-    m_endOfLine = {this->getPosition().x +
-                       GlobalVar::lineSize.x *
-                           std::cos(getRotation().asRadians()),
-                   this->getPosition().y +
-                       GlobalVar::lineSize.x *
-                           std::sin(getRotation().asRadians())};
+    m_endOfLine = {
+        this->getPosition().x +
+            GlobalVar::lineSize.x * std::cos(getRotation().asRadians()),
+        this->getPosition().y +
+            GlobalVar::lineSize.x * std::sin(getRotation().asRadians())};
 
     // auto temp{this->getPosition()};
     // this->setPosition(m_endOfLine);
@@ -64,14 +63,13 @@ public:
     } else {
       this->sf::Transformable::rotate(sf::degrees(-1.f));
     }
-    //std::cout << degree << " " << this->getRotation().asDegrees() << '\n';
+    // std::cout << degree << " " << this->getRotation().asDegrees() << '\n';
 
-    m_endOfLine = {this->getPosition().x +
-                       GlobalVar::lineSize.x *
-                           std::cos(getRotation().asRadians()),
-                   this->getPosition().y +
-                       GlobalVar::lineSize.x *
-                           std::sin(getRotation().asRadians())};
+    m_endOfLine = {
+        this->getPosition().x +
+            GlobalVar::lineSize.x * std::cos(getRotation().asRadians()),
+        this->getPosition().y +
+            GlobalVar::lineSize.x * std::sin(getRotation().asRadians())};
   }
 };
 
