@@ -26,14 +26,16 @@ int main() {
   sf::Clock clock;
 
   // Starting game state
-  ScreenState currentState{};
+  GameState currentState{GameState::starting_screen};
 
   // Initializing font
-  // sf::Font font;
-  // if (!font.openFromFile("./assets/font.tff")) {
-  //   std::cerr << "Failed to load font from file\n";
-  // }
+  sf::Font font;
+  if (!font.openFromFile("./assets/font.ttf")) {
+    std::cerr << "Failed to load font from file\n";
+  }
   GameScreen gameScreen{window};
+  StartScreen startScreen{window, font};
+
 
   // Main loop
   while (window.isOpen()) {
@@ -43,9 +45,18 @@ int main() {
 
     float delta = clock.restart().asSeconds();
 
-    gameScreen.update();
-
-    gameScreen.draw();
+    if (currentState == GameState::starting_screen) {
+      startScreen.update();
+      if (startScreen.isButtonPressed()) {
+        currentState = GameState::running;
+        continue;
+      }
+      gameScreen.draw();
+      startScreen.draw();
+    } else {
+      gameScreen.update();
+      gameScreen.draw();
+    }
 
     // if (currentState.getState() != GameState::running) {
     //   switch (currentState.getState()) {
