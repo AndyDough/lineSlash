@@ -29,11 +29,11 @@ int main() {
   ScreenState currentState{};
 
   // Initializing font
-  sf::Font font;
-  if (!font.openFromFile("./assets/font.tff")) {
-    std::cerr << "Failed to load font from file\n";
-  }
-  GameScreen gameScreen{};
+  // sf::Font font;
+  // if (!font.openFromFile("./assets/font.tff")) {
+  //   std::cerr << "Failed to load font from file\n";
+  // }
+  GameScreen gameScreen{window};
 
   // Main loop
   while (window.isOpen()) {
@@ -43,11 +43,9 @@ int main() {
 
     float delta = clock.restart().asSeconds();
 
-    window.draw(playArea);
-    window.draw(ball);
+    gameScreen.update();
 
-    // NOTE:: fix bug where line gets stuck in boundaries
-    window.draw(line);
+    gameScreen.draw();
 
     // if (currentState.getState() != GameState::running) {
     //   switch (currentState.getState()) {

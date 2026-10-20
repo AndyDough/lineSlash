@@ -8,7 +8,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Window.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 enum class GameState {
   starting_screen,
   running,
@@ -21,12 +21,12 @@ enum class GameState {
 class BaseScreen {
 public:
   virtual void update() = 0;
-  virtual void draw(sf::Window window) = 0;
+  virtual void draw() = 0;
 };
 
 class GameScreen : public BaseScreen {
 private:
-  sf::Window &m_window;
+  sf::RenderWindow &m_window;
   sf::Vector2f m_center;
   sf::RectangleShape m_playArea;
   sf::FloatRect m_topBound;
@@ -37,33 +37,46 @@ private:
   Player m_player1;
 
 public:
-  GameScreen(sf::Window &window)
+  GameScreen(sf::RenderWindow &window)
       : m_window{window},
         m_center{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
                  GlobalVar::playAreaSize / 2.f},
         m_ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
                (m_center * 2.f)},
-        m_player1({m_center.x + 20.f, m_center.y * 2.f}) {
+        m_player1({m_center.x + 20.f, m_center.y * 2.f}),
+        // since we know that playarea position is m_center and size is GlobalVar::playAreaSize, we can just hardcode the bounds
+        m_topBound{{m_center.x - 10.f, m_center.y - 10.f},
+                    sf::Vector2f{GlobalVar::playAreaSize.x + 20.f, 10.f}},
+        m_bottomBound{{m_center.x, m_center.y + GlobalVar::playAreaSize.y},
+                       sf::Vector2f{GlobalVar::playAreaSize.x + 10.f, 10.f}},
+        m_leftBound{{m_center.x - 10.f, m_center.y},
+                     sf::Vector2f{10.f, GlobalVar::playAreaSize.y + 10.f}},
+        m_rightBound{{m_center.x + GlobalVar::playAreaSize.x, m_center.y},
+                      sf::Vector2f{10.f, GlobalVar::playAreaSize.y + 10.f}}
+    {
     m_playArea.setSize(GlobalVar::playAreaSize);
     m_playArea.setFillColor(sf::Color::Black);
     m_playArea.setOutlineColor(sf::Color::White);
     m_playArea.setOutlineThickness(10.0);
     m_playArea.setPosition(m_center);
 
-    // Walls with that can be hit lol
-    sf::Vector2f playAreaPos{m_playArea.getPosition()};
-    sf::Vector2f playAreaSize{m_playArea.getSize()};
+    // just for reference
 
-    sf::FloatRect topBound{{playAreaPos.x - 10.f, playAreaPos.y - 10.f},
-                           sf::Vector2f{playAreaSize.x + 20.f, 10.f}};
-    sf::FloatRect bottomBound{
-        sf::Vector2f{playAreaPos.x, playAreaPos.y + playAreaSize.y},
-        sf::Vector2f{playAreaSize.x + 10.f, 10.f}};
-    sf::FloatRect leftBound{{playAreaPos.x - 10.f, playAreaPos.y},
-                            sf::Vector2f{10.f, playAreaSize.y + 10.f}};
-    sf::FloatRect rightBound{
-        sf::Vector2f{playAreaPos.x + playAreaSize.x, playAreaPos.y},
-        sf::Vector2f{10.f, playAreaSize.y + 10.f}};
+    // Walls with that can be hit lol
+    // sf::Vector2f playAreaPos{m_playArea.getPosition()};
+    // sf::Vector2f playAreaSize{m_playArea.getSize()};
+
+    // sf::FloatRect topBound{{playAreaPos.x - 10.f, playAreaPos.y - 10.f},
+    //                        sf::Vector2f{playAreaSize.x + 20.f, 10.f}};
+    // sf::FloatRect bottomBound{
+    //     sf::Vector2f{playAreaPos.x, playAreaPos.y + playAreaSize.y},
+    //     sf::Vector2f{playAreaSize.x + 10.f, 10.f}};
+
+    // sf::FloatRect leftBound{{playAreaPos.x - 10.f, playAreaPos.y},
+    //                         sf::Vector2f{10.f, playAreaSize.y + 10.f}};
+    // sf::FloatRect rightBound{
+    //     sf::Vector2f{playAreaPos.x + playAreaSize.x, playAreaPos.y},
+    //     sf::Vector2f{10.f, playAreaSize.y + 10.f}};
   }
 
   void update() override {
@@ -114,7 +127,9 @@ public:
     m_player1.rotate();
   }
   void draw() override {
-
+    m_window.draw(m_playArea);
+    m_window.draw(m_ball);
+    m_window.draw(m_player1);
   }
 };
 
