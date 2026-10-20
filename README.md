@@ -17,10 +17,19 @@ roadmap:
 
   [x] 6. Increase the ball's speed over time
 
-  [ ] 7. Define player class
+  [x] 7. Define player class
          [x] - check bounds against player or other way around
          [x] - fix rotation change
-         [] - fix pivot function
+         [x] - fix pivot function
 
   [x] 8. Have ball detect when it hits line
+
+  [ ] 9. Start and end screen
+    [x] - Write text to screen
+    [ ] - Start screen ask for button click to start game
+    [ ] - When ball hits player pause screen to show
+          where ball hit player
+
+  [ ] 10. scoring system
+
 
