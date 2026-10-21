@@ -10,6 +10,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
+// #include <format>
 #include <optional>
 enum class GameState {
   starting_screen,
@@ -39,10 +40,11 @@ private:
   Ball m_ball;
   Player m_player1;
   GameState &m_gameState;
+  sf::Text m_scoreText;
 
 public:
-  GameScreen(sf::RenderWindow &window, GameState &state)
-      : m_window{window},
+  GameScreen(sf::RenderWindow &window, GameState &state, sf::Font font)
+      : m_window{window}, m_scoreText{font},
         m_center{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
                  GlobalVar::playAreaSize / 2.f},
         m_ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
@@ -64,23 +66,9 @@ public:
     m_playArea.setOutlineThickness(10.0);
     m_playArea.setPosition(m_center);
 
-    // just for reference
-
-    // Walls with that can be hit lol
-    // sf::Vector2f playAreaPos{m_playArea.getPosition()};
-    // sf::Vector2f playAreaSize{m_playArea.getSize()};
-
-    // sf::FloatRect topBound{{playAreaPos.x - 10.f, playAreaPos.y - 10.f},
-    //                        sf::Vector2f{playAreaSize.x + 20.f, 10.f}};
-    // sf::FloatRect bottomBound{
-    //     sf::Vector2f{playAreaPos.x, playAreaPos.y + playAreaSize.y},
-    //     sf::Vector2f{playAreaSize.x + 10.f, 10.f}};
-
-    // sf::FloatRect leftBound{{playAreaPos.x - 10.f, playAreaPos.y},
-    //                         sf::Vector2f{10.f, playAreaSize.y + 10.f}};
-    // sf::FloatRect rightBound{
-    //     sf::Vector2f{playAreaPos.x + playAreaSize.x, playAreaPos.y},
-    //     sf::Vector2f{10.f, playAreaSize.y + 10.f}};
+    m_scoreText.setString("0");
+    m_scoreText.setPosition(
+        sf::Vector2f{m_center.x, m_topBound.position.y + 24.f});
   }
 
   void update() override {
@@ -103,11 +91,13 @@ public:
         m_bottomBound.findIntersection(m_ball.getGlobalBounds())) {
       m_ball.flipSpeedY();
       m_ball.increaseBallSpeed();
+      m_player1.updateScore();
     }
     if (m_rightBound.findIntersection(m_ball.getGlobalBounds()) ||
         m_leftBound.findIntersection(m_ball.getGlobalBounds())) {
       m_ball.flipSpeedX();
       m_ball.increaseBallSpeed();
+      m_player1.updateScore();
     }
 
     if (m_topBound.contains(m_player1.getTipHitBox()) ||
@@ -135,6 +125,7 @@ public:
     m_window.draw(m_playArea);
     m_window.draw(m_ball);
     m_window.draw(m_player1);
+    m_window.draw(m_scoreText);
   }
 };
 
