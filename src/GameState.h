@@ -43,7 +43,7 @@ private:
   sf::Text m_scoreText;
 
 public:
-  GameScreen(sf::RenderWindow &window, GameState &state, sf::Font font)
+  GameScreen(sf::RenderWindow &window, GameState &state, sf::Font& font)
       : m_window{window}, m_scoreText{font},
         m_center{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
                  GlobalVar::playAreaSize / 2.f},
