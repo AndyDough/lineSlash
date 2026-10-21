@@ -31,8 +31,5 @@ roadmap:
           where ball hit player
 
   [ ] 10. scoring system
-    [ ] - Display Score on top playArea
-    [ ] - Score should tick up every time the ball hits a boundry
-    [ ] - Final Score is displayed after all 3 lives of player is gone
 
 

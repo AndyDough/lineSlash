@@ -33,7 +33,7 @@ int main() {
   if (!font.openFromFile("./assets/font.ttf")) {
     std::cerr << "Failed to load font from file\n";
   }
-  GameScreen gameScreen{window, currentState, font};
+  GameScreen gameScreen{window, currentState};
   StartScreen startScreen{window, font};
   HitScreen hitScreen{window, font};
 

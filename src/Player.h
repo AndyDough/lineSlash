@@ -27,9 +27,6 @@ public:
 
   void swapRotation() { m_turnClockwise = !m_turnClockwise; }
 
-  int getScore() const { return m_score; }
-  void updateScore() { ++m_score; }
-
   const sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
   void procIFrames() { m_IFrames = 20; }
