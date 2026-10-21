@@ -33,9 +33,9 @@ int main() {
   if (!font.openFromFile("./assets/font.ttf")) {
     std::cerr << "Failed to load font from file\n";
   }
-  GameScreen gameScreen{window};
+  GameScreen gameScreen{window, currentState};
   StartScreen startScreen{window, font};
-
+  HitScreen hitScreen{window, font};
 
   // Main loop
   while (window.isOpen()) {
@@ -53,6 +53,14 @@ int main() {
       }
       gameScreen.draw();
       startScreen.draw();
+    } else if (currentState == GameState::hit) {
+      hitScreen.update();
+      if (hitScreen.isButtomPressed()) {
+        currentState = GameState::running;
+        continue;
+      }
+      gameScreen.draw();
+      hitScreen.draw();
     } else {
       gameScreen.update();
       gameScreen.draw();

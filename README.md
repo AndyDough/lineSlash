@@ -26,8 +26,8 @@ roadmap:
 
   [ ] 9. Start and end screen
     [x] - Write text to screen
-    [ ] - Start screen ask for button click to start game
-    [ ] - When ball hits player pause screen to show
+    [x] - Start screen ask for button click to start game
+    [x] - When ball hits player pause screen to show
           where ball hit player
 
   [ ] 10. scoring system
