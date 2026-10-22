@@ -32,6 +32,7 @@ public:
 class GameScreen : public BaseScreen {
 private:
   sf::RenderWindow &m_window;
+  sf::Vector2f m_screenLeftCorner;
   sf::Vector2f m_center;
   sf::RectangleShape m_playArea;
   sf::FloatRect m_topBound;
@@ -46,34 +47,40 @@ private:
 public:
   GameScreen(sf::RenderWindow &window, GameState &state, sf::Font &font)
       : m_window{window}, m_scoreText{font},
-        m_center{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
-                 GlobalVar::playAreaSize / 2.f},
+        m_screenLeftCorner{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
+                           GlobalVar::playAreaSize / 2.f},
         m_ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,
-               (m_center * 2.f)},
-        m_gameState{state}, m_player1({m_center.x + 20.f, m_center.y * 2.f}),
-        // since we know that playarea position is m_center and size is
-        // GlobalVar::playAreaSize, we can just hardcode the bounds
-        m_topBound{{m_center.x - 10.f, m_center.y - 10.f},
+               (m_screenLeftCorner * 2.f)},
+        m_gameState{state},
+        m_player1({m_screenLeftCorner.x + 20.f, m_screenLeftCorner.y * 2.f}),
+        // since we know that playarea position is m_screenLeftCorner and size
+        // is GlobalVar::playAreaSize, we can just hardcode the bounds
+        m_topBound{{m_screenLeftCorner.x - 10.f, m_screenLeftCorner.y - 10.f},
                    sf::Vector2f{GlobalVar::playAreaSize.x + 20.f, 10.f}},
-        m_bottomBound{{m_center.x, m_center.y + GlobalVar::playAreaSize.y},
+        m_bottomBound{{m_screenLeftCorner.x,
+                       m_screenLeftCorner.y + GlobalVar::playAreaSize.y},
                       sf::Vector2f{GlobalVar::playAreaSize.x + 10.f, 10.f}},
-        m_leftBound{{m_center.x - 10.f, m_center.y},
+        m_leftBound{{m_screenLeftCorner.x - 10.f, m_screenLeftCorner.y},
                     sf::Vector2f{10.f, GlobalVar::playAreaSize.y + 10.f}},
-        m_rightBound{{m_center.x + GlobalVar::playAreaSize.x, m_center.y},
+        m_rightBound{{m_screenLeftCorner.x + GlobalVar::playAreaSize.x,
+                      m_screenLeftCorner.y},
                      sf::Vector2f{10.f, GlobalVar::playAreaSize.y + 10.f}} {
     m_playArea.setSize(GlobalVar::playAreaSize);
     m_playArea.setFillColor(sf::Color::Black);
     m_playArea.setOutlineColor(sf::Color::White);
     m_playArea.setOutlineThickness(10.0);
-    m_playArea.setPosition(m_center);
+    m_playArea.setPosition(m_screenLeftCorner);
 
-    m_scoreText.setString(std::format("{}", m_player1.getScore()));
-    m_scoreText.setPosition(
-        sf::Vector2f{m_center.x / 2.f, m_topBound.position.y + 24.f});
+    // Position of health counter sf::Vector2f{m_screenLeftCorner.x +
+    // (m_screenLeftCorner.x / 2.f), m_topBound.position.y - 40.f}
   }
 
   void update() override {
     m_scoreText.setString(std::format("{}", m_player1.getScore()));
+    m_scoreText.setPosition(sf::Vector2f{
+        m_topBound.position.x +
+            ((m_topBound.size.x - m_scoreText.getGlobalBounds().size.x) / 2.f),
+        m_topBound.position.y - 40.f});
     // check for closing window event
     while (const std::optional event = m_window.pollEvent()) {
       if (event->is<sf::Event::Closed>()) {
