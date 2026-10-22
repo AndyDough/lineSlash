@@ -10,8 +10,9 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
-// #include <format>
+#include <format>
 #include <optional>
+
 enum class GameState {
   starting_screen,
   running,
@@ -43,7 +44,7 @@ private:
   sf::Text m_scoreText;
 
 public:
-  GameScreen(sf::RenderWindow &window, GameState &state, sf::Font& font)
+  GameScreen(sf::RenderWindow &window, GameState &state, sf::Font &font)
       : m_window{window}, m_scoreText{font},
         m_center{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
                  GlobalVar::playAreaSize / 2.f},
@@ -66,12 +67,13 @@ public:
     m_playArea.setOutlineThickness(10.0);
     m_playArea.setPosition(m_center);
 
-    m_scoreText.setString("0");
+    m_scoreText.setString(std::format("{}", m_player1.getScore()));
     m_scoreText.setPosition(
-        sf::Vector2f{m_center.x, m_topBound.position.y + 24.f});
+        sf::Vector2f{m_center.x / 2.f, m_topBound.position.y + 24.f});
   }
 
   void update() override {
+    m_scoreText.setString(std::format("{}", m_player1.getScore()));
     // check for closing window event
     while (const std::optional event = m_window.pollEvent()) {
       if (event->is<sf::Event::Closed>()) {
