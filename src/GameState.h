@@ -10,6 +10,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 #include <format>
 #include <optional>
 
@@ -43,6 +44,7 @@ private:
   Player m_player1;
   GameState &m_gameState;
   sf::Text m_scoreText;
+  sf::Text m_livesText;
 
 public:
   GameScreen(sf::RenderWindow &window, GameState &state, sf::Font &font)
@@ -55,6 +57,7 @@ public:
         m_player1({m_screenLeftCorner.x + 20.f, m_screenLeftCorner.y * 2.f}),
         // since we know that playarea position is m_screenLeftCorner and size
         // is GlobalVar::playAreaSize, we can just hardcode the bounds
+        m_livesText(font),
         m_topBound{{m_screenLeftCorner.x - 10.f, m_screenLeftCorner.y - 10.f},
                    sf::Vector2f{GlobalVar::playAreaSize.x + 20.f, 10.f}},
         m_bottomBound{{m_screenLeftCorner.x,
@@ -70,12 +73,15 @@ public:
     m_playArea.setOutlineColor(sf::Color::White);
     m_playArea.setOutlineThickness(10.0);
     m_playArea.setPosition(m_screenLeftCorner);
-
-    // Position of health counter sf::Vector2f{m_screenLeftCorner.x +
-    // (m_screenLeftCorner.x / 2.f), m_topBound.position.y - 40.f}
   }
 
+  int getScore() const { return m_player1.getScore(); }
+
   void update() override {
+    m_livesText.setString(std::format("lives: {}", m_player1.getLives()));
+    m_livesText.setPosition(
+        sf::Vector2f{m_screenLeftCorner.x, m_topBound.position.y - 40.f});
+
     m_scoreText.setString(std::format("{}", m_player1.getScore()));
     m_scoreText.setPosition(sf::Vector2f{
         m_topBound.position.x +
@@ -121,11 +127,13 @@ public:
     if (!m_player1.checkIniviciblity()) {
       if (m_player1.getGlobalBounds().findIntersection(
               m_ball.getGlobalBounds())) {
-        std::cout << "ball hit line\n";
         m_player1.procIFrames();
-        m_gameState = GameState::hit;
-        // m_ball.flipSpeedX(); // Finicky could instead of bouncy just explode
-        // line/player
+        m_player1.minusLife();
+        if (!m_player1.isAlive()) {
+          m_gameState = GameState::game_over;
+        } else {
+          m_gameState = GameState::hit;
+        }
       }
     }
     m_player1.rotate();
@@ -134,20 +142,19 @@ public:
     m_window.draw(m_playArea);
     m_window.draw(m_ball);
     m_window.draw(m_player1);
-    m_window.draw(m_scoreText);
+    m_window.draw(m_livesText);
+    if (m_gameState != GameState::game_over) {
+      m_window.draw(m_scoreText);
+    }
   }
 };
 
 class StartScreen : public BaseScreen {
 private:
   sf::RenderWindow &m_window;
-
   sf::Font &m_font;
-
   sf::RectangleShape m_background;
-
   sf::Text m_startText;
-
   mutable bool m_buttonPressed;
 
 public:
@@ -186,32 +193,11 @@ public:
     } else
       return false;
   }
+
   void draw() override {
     m_window.draw(m_background);
     m_window.draw(m_startText);
   }
-};
-
-class ScreenState {
-private:
-  GameState m_state{GameState::starting_screen};
-
-public:
-  ScreenState() = default;
-  GameState getState() const { return m_state; }
-
-  sf::Text getStartScreen(sf::Font font) {
-    sf::Text text(font);
-
-    return text;
-  }
-
-  sf::Text getPauseScreen(sf::Font font);
-  sf::Text getGameOverScreen(sf::Font font, int score);
-  sf::Text getWinScreen(sf::Font font);
-
-  void draw();
-  void update();
 };
 
 class HitScreen : public BaseScreen {
@@ -252,6 +238,50 @@ public:
     }
   }
   void draw() override { m_window.draw(m_hitText); }
+};
+
+class GameOverScreen : public BaseScreen {
+private:
+  sf::Text m_gameOverText;
+  sf::RenderWindow &m_window;
+  GameScreen &m_gameScreenRef;
+  mutable bool m_buttonPressed{false};
+
+public:
+  GameOverScreen(sf::RenderWindow &window, sf::Font &font,
+                 GameScreen &gameScreen)
+      : m_window{window}, m_gameOverText{font}, m_gameScreenRef{gameScreen} {
+    m_gameOverText.setCharacterSize(24);
+    m_gameOverText.setFillColor(sf::Color::White);
+    m_gameOverText.setStyle(sf::Text::Bold);
+  }
+  bool isButtomPressed() const {
+    if (m_buttonPressed) {
+      m_buttonPressed = false;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void update() override {
+    m_gameOverText.setString(std::format("You have ran out of lives\n"
+                                         "Your final score {}",
+                                         m_gameScreenRef.getScore()));
+    m_gameOverText.setLineAlignment(sf::Text::LineAlignment::Center);
+    m_gameOverText.setPosition(sf::Vector2f{
+        m_window.getSize().x / 2.f,
+        m_window.getSize().y / 2.f - m_gameOverText.getGlobalBounds().size.y});
+    while (const std::optional event = m_window.pollEvent()) {
+      if (event->is<sf::Event::Closed>()) {
+        m_window.close();
+      }
+      if (event->is<sf::Event::MouseButtonPressed>()) {
+        m_buttonPressed = true;
+      }
+    }
+  }
+  void draw() override { m_window.draw(m_gameOverText); };
 };
 
 // Load font

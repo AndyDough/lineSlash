@@ -36,6 +36,7 @@ int main() {
   GameScreen gameScreen{window, currentState, font};
   StartScreen startScreen{window, font};
   HitScreen hitScreen{window, font};
+  GameOverScreen gameOverScreen{window, font, gameScreen};
 
   // Main loop
   while (window.isOpen()) {
@@ -45,7 +46,8 @@ int main() {
 
     float delta = clock.restart().asSeconds();
 
-    if (currentState == GameState::starting_screen) {
+    switch (currentState) {
+    case GameState::starting_screen:
       startScreen.update();
       if (startScreen.isButtonPressed()) {
         currentState = GameState::running;
@@ -53,7 +55,8 @@ int main() {
       }
       gameScreen.draw();
       startScreen.draw();
-    } else if (currentState == GameState::hit) {
+      break;
+    case GameState::hit:
       hitScreen.update();
       if (hitScreen.isButtomPressed()) {
         currentState = GameState::running;
@@ -61,29 +64,20 @@ int main() {
       }
       gameScreen.draw();
       hitScreen.draw();
-    } else {
+      break;
+    case GameState::game_over:
+      gameOverScreen.update();
+      if (gameOverScreen.isButtomPressed()) {
+        currentState = GameState::starting_screen;
+        continue;
+      }
+      gameScreen.draw();
+      gameOverScreen.draw();
+      break;
+    default:
       gameScreen.update();
       gameScreen.draw();
     }
-
-    // if (currentState.getState() != GameState::running) {
-    //   switch (currentState.getState()) {
-    //   case GameState::starting_screen:
-    //     currentState.getStartScreen(font);
-    //     break;
-    //   case GameState::paused:
-    //     currentState.getPauseScreen(font);
-    //     break;
-    //   case GameState::game_over:
-    //     currentState.getGameOverScreen(font);
-    //     break;
-    //   case GameState::win:
-    //     currentState.getWinScreen(font);
-    //     break;
-    //   default:
-    //     break;
-    //   }
-    // }
 
     window.display();
   }

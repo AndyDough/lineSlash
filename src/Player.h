@@ -30,6 +30,10 @@ public:
   int getScore() const { return m_score; }
   void updateScore() { ++m_score; }
 
+  int getLives() const { return m_lives; }
+  void minusLife() { --m_lives; }
+  bool isAlive() const { return m_lives > 0; }
+
   const sf::Vector2f &getTipHitBox() { return m_endOfLine; }
 
   void procIFrames() { m_IFrames = 20; }
