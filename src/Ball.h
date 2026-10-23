@@ -8,17 +8,23 @@
 
 class Ball : public sf::CircleShape {
 private:
+  const sf::Vector2f m_startingSpeed;
   sf::Vector2f m_speed;
-  sf::Vector2f m_startingPos;
+  const sf::Vector2f m_startingPos;
 
 public:
   Ball(float radius, float speed, sf::Vector2f startPos)
-      : sf::CircleShape(radius), m_speed{speed, speed} {
-    this->setPosition(startPos);
+      : sf::CircleShape(radius), m_startingSpeed{speed, speed},
+        m_startingPos{startPos}, m_speed{m_startingSpeed} {
+    this->setPosition(m_startingPos);
   }
 
   sf::Vector2f &getSpeed() { return m_speed; };
 
+  void reset() {
+    m_speed = m_startingSpeed;
+    this->setPosition(m_startingPos);
+  }
 
   void flipSpeedX() { m_speed.x *= -1; }
   void flipSpeedY() { m_speed.y *= -1; }

@@ -6,8 +6,8 @@ const sf::Vector2u windowSize{800, 600};
 const sf::Vector2f playAreaSize{sf::Vector2f{500, 300}};
 const sf::Vector2f lineSize{50.f, 3.f};
 const int lives{3};
-const float ballRadius{10.f};
+const float ballRadius{12.f};
 const float speedIncrease{1.25f};
-const float maxBallSpeed{10.f};
+const float maxBallSpeed{5.f};
 const float startingBallSpeed{2.f};
 } // namespace GlobalVar

@@ -75,6 +75,11 @@ public:
     m_playArea.setPosition(m_screenLeftCorner);
   }
 
+  void reset() {
+    m_player1.reset();
+    m_ball.reset();
+  }
+
   int getScore() const { return m_player1.getScore(); }
 
   void update() override {
@@ -142,9 +147,9 @@ public:
     m_window.draw(m_playArea);
     m_window.draw(m_ball);
     m_window.draw(m_player1);
-    m_window.draw(m_livesText);
     if (m_gameState != GameState::game_over) {
       m_window.draw(m_scoreText);
+      m_window.draw(m_livesText);
     }
   }
 };
@@ -204,11 +209,16 @@ class HitScreen : public BaseScreen {
 private:
   sf::RenderWindow &m_window;
   sf::Text m_hitText;
+  sf::RectangleShape m_background;
   mutable bool m_buttonPressed;
 
 public:
   HitScreen(sf::RenderWindow &window, sf::Font &font)
-      : m_window{window}, m_hitText{font}, m_buttonPressed{false} {
+      : m_window{window}, m_hitText{font}, m_buttonPressed{false},
+        m_background{static_cast<sf::Vector2f>(window.getSize())} {
+    m_background.setFillColor(sf::Color(0, 0, 0, 155));
+    m_background.setPosition({0, 0});
+
     m_hitText.setString("You Got HIT Press A Key To Continue");
     m_hitText.setCharacterSize(24);
     m_hitText.setFillColor(sf::Color::White);
@@ -237,11 +247,15 @@ public:
       }
     }
   }
-  void draw() override { m_window.draw(m_hitText); }
+  void draw() override {
+    m_window.draw(m_background);
+    m_window.draw(m_hitText);
+  }
 };
 
 class GameOverScreen : public BaseScreen {
 private:
+  sf::RectangleShape m_background;
   sf::Text m_gameOverText;
   sf::RenderWindow &m_window;
   GameScreen &m_gameScreenRef;
@@ -250,7 +264,12 @@ private:
 public:
   GameOverScreen(sf::RenderWindow &window, sf::Font &font,
                  GameScreen &gameScreen)
-      : m_window{window}, m_gameOverText{font}, m_gameScreenRef{gameScreen} {
+      : m_window{window}, m_gameOverText{font},
+        m_background{static_cast<sf::Vector2f>(window.getSize())},
+        m_gameScreenRef{gameScreen} {
+    m_background.setFillColor(sf::Color{0, 0, 0, 155});
+    m_background.setPosition({0, 0});
+
     m_gameOverText.setCharacterSize(24);
     m_gameOverText.setFillColor(sf::Color::White);
     m_gameOverText.setStyle(sf::Text::Bold);
@@ -266,12 +285,15 @@ public:
 
   void update() override {
     m_gameOverText.setString(std::format("You have ran out of lives\n"
-                                         "Your final score {}",
+                                         "Your final score\n"
+                                         "{}\n\n"
+                                         "Press button to continue",
                                          m_gameScreenRef.getScore()));
     m_gameOverText.setLineAlignment(sf::Text::LineAlignment::Center);
-    m_gameOverText.setPosition(sf::Vector2f{
-        m_window.getSize().x / 2.f,
-        m_window.getSize().y / 2.f - m_gameOverText.getGlobalBounds().size.y});
+    m_gameOverText.setPosition(
+        sf::Vector2f{m_window.getSize().x / 2.f,
+                     m_window.getSize().y / 2.f -
+                         (m_gameOverText.getGlobalBounds().size.y - 50.f)});
     while (const std::optional event = m_window.pollEvent()) {
       if (event->is<sf::Event::Closed>()) {
         m_window.close();
@@ -281,7 +303,10 @@ public:
       }
     }
   }
-  void draw() override { m_window.draw(m_gameOverText); };
+  void draw() override {
+    m_window.draw(m_background);
+    m_window.draw(m_gameOverText);
+  };
 };
 
 // Load font

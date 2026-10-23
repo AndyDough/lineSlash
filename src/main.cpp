@@ -69,6 +69,8 @@ int main() {
       gameOverScreen.update();
       if (gameOverScreen.isButtomPressed()) {
         currentState = GameState::starting_screen;
+        gameScreen.reset();
+        gameScreen.update();
         continue;
       }
       gameScreen.draw();

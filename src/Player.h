@@ -14,13 +14,24 @@ private:
   int m_score{0};
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
+  sf::Vector2f m_startingPos;
   bool m_turnClockwise{true};
-  int m_IFrames{0};
+  int m_IFrames{10};
 
 public:
   Player(const sf::Vector2f &startingPos)
-      : sf::RectangleShape(GlobalVar::lineSize) {
+      : sf::RectangleShape(GlobalVar::lineSize), m_startingPos{startingPos} {
     this->setPosition(startingPos);
+    m_endOfLine = {this->getPosition().x + GlobalVar::lineSize.x,
+                   this->getPosition().y};
+  }
+
+  void reset() {
+    m_lives = GlobalVar::lives;
+    m_score = 0;
+    m_turnClockwise = true;
+    this->setPosition(m_startingPos);
+    this->setRotation(sf::degrees(0));
     m_endOfLine = {this->getPosition().x + GlobalVar::lineSize.x,
                    this->getPosition().y};
   }
