@@ -8,6 +8,7 @@ const sf::Vector2f lineSize{50.f, 3.f};
 const int lives{3};
 const float ballRadius{5.f};
 const float speedIncrease{1.25f};
-const float maxBallSpeed{5.f};
-const float startingBallSpeed{2.f};
+const float maxBallSpeed{700.f};
+const float startingBallSpeed{400.f};
+const float angleIncrement{180.f};
 } // namespace GlobalVar

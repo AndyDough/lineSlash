@@ -6,6 +6,9 @@
 #include "GameState.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Text.hpp>
+
+extern float getDeltaTime();
+
 class GameScreen : public BaseScreen {
 private:
   sf::RenderWindow &m_window;
@@ -97,7 +100,7 @@ public:
       }
     }
 
-    m_ball.move(m_ball.getSpeed());
+    m_ball.move(m_ball.getSpeed()* getDeltaTime());
     if (m_topBound.findIntersection(m_ball.getGlobalBounds()) ||
         m_bottomBound.findIntersection(m_ball.getGlobalBounds())) {
       m_ball.flipSpeedY();

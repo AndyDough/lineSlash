@@ -19,7 +19,7 @@ public:
     this->setPosition(m_startingPos);
   }
 
-  sf::Vector2f &getSpeed() { return m_speed; };
+  sf::Vector2f &getSpeed() { return m_speed; }
 
   void reset() {
     m_speed = m_startingSpeed;
