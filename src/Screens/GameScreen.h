@@ -22,10 +22,11 @@ private:
   GameState &m_gameState;
   sf::Text m_scoreText;
   sf::Text m_livesText;
+  sf::Text m_highScoreText;
 
 public:
   GameScreen(sf::RenderWindow &window, GameState &state, sf::Font &font)
-      : m_window{window}, m_scoreText{font},
+      : m_window{window}, m_scoreText{font}, m_highScoreText{font},
         m_screenLeftCorner{(static_cast<sf::Vector2f>(window.getSize()) / 2.f) -
                            GlobalVar::playAreaSize / 2.f},
         m_ball{GlobalVar::ballRadius, GlobalVar::startingBallSpeed,

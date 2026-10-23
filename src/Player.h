@@ -7,11 +7,11 @@
 #include <SFML/System/Vector2.hpp>
 #include <cmath>
 #include <iostream>
-#include <utility>
 
 class Player : public sf::RectangleShape {
 private:
   int m_score{0};
+  int m_highScore{0};
   int m_lives{GlobalVar::lives};
   sf::Vector2f m_endOfLine;
   sf::Vector2f m_startingPos;
