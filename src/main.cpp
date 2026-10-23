@@ -1,7 +1,9 @@
-#include "Ball.h"
 #include "Constants.h"
-#include "GameState.h"
-#include "Player.h"
+#include "Screens/GameOverScreen.h"
+#include "Screens/GameScreen.h"
+#include "Screens/GameState.h"
+#include "Screens/HitScreen.h"
+#include "Screens/StartScreen.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -17,7 +19,6 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/Window.hpp>
 #include <iostream>
-#include <optional>
 
 int main() {
   sf::RenderWindow window(sf::VideoMode(GlobalVar::windowSize), "My Window");
@@ -46,9 +47,9 @@ int main() {
 
     float delta = clock.restart().asSeconds();
 
+    gameScreen.draw();
     switch (currentState) {
     case GameState::starting_screen:
-      gameScreen.draw();
       startScreen.draw();
       if (startScreen.isButtonPressed()) {
         currentState = GameState::running;
@@ -57,7 +58,6 @@ int main() {
       startScreen.update();
       break;
     case GameState::hit:
-      gameScreen.draw();
       hitScreen.draw();
       if (hitScreen.isButtomPressed()) {
         currentState = GameState::running;
@@ -66,7 +66,6 @@ int main() {
       hitScreen.update();
       break;
     case GameState::game_over:
-      gameScreen.draw();
       gameOverScreen.draw();
       if (gameOverScreen.isButtomPressed()) {
         currentState = GameState::starting_screen;
@@ -77,7 +76,6 @@ int main() {
       gameOverScreen.update();
       break;
     default:
-      gameScreen.draw();
       gameScreen.update();
     }
 

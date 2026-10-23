@@ -41,7 +41,7 @@ roadmap:
 
   [ ] 13. Fix bs hitbox reg
 
-  [ ] 14. balance ball
+  [x] 14. balance ball
 
 
 
