@@ -35,4 +35,11 @@ roadmap:
     [x] - Score should tick up every time the ball hits a boundry
     [x] - Final Score is displayed after all 3 lives of player is gone
 
+  [ ] 11. Fix life counter
+  [ ] 12. Reset game function
+
+
+
+
+
 
