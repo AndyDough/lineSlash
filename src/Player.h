@@ -8,6 +8,8 @@
 #include <cmath>
 #include <iostream>
 
+extern float getDeltaTime();
+
 class Player : public sf::RectangleShape {
 private:
   int m_score{0};
@@ -16,7 +18,7 @@ private:
   sf::Vector2f m_endOfLine;
   sf::Vector2f m_startingPos;
   bool m_turnClockwise{true};
-  int m_IFrames{10};
+  int m_IFrames{20};
 
 public:
   Player(const sf::Vector2f &startingPos)
@@ -89,9 +91,9 @@ public:
 
   void rotate() {
     if (m_turnClockwise) {
-      this->sf::Transformable::rotate(sf::degrees(5.f));
+      this->sf::Transformable::rotate(sf::degrees(GlobalVar::angleIncrement * getDeltaTime()));
     } else {
-      this->sf::Transformable::rotate(sf::degrees(-5.f));
+      this->sf::Transformable::rotate(sf::degrees(-GlobalVar::angleIncrement * getDeltaTime()));
     }
     // std::cout << degree << " " << this->getRotation().asDegrees() << '\n';
 

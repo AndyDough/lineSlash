@@ -41,7 +41,7 @@ public:
                                          "{}\n\n"
                                          "Press button to continue",
                                          m_gameScreenRef.getScore()));
-    m_gameOverText.setLineAlignment(sf::Text::LineAlignment::Center);
+    //m_gameOverText.setLineAlignment(sf::Text::LineAlignment::Center);
     m_gameOverText.setPosition(
         sf::Vector2f{m_window.getSize().x / 2.f,
                      m_window.getSize().y / 2.f -
