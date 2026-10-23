@@ -100,8 +100,17 @@ public:
       if (const auto *mouseButtonPressed =
               event->getIf<sf::Event::MouseButtonPressed>()) {
         if (mouseButtonPressed->button == sf::Mouse::Button::Left) {
-          std::cout << "the right button was pressed" << std::endl;
+          // std::cout << "the right button was pressed" << std::endl;
+          sf::Vector2f oldPos{m_player1.getPosition()};
+          sf::Angle oldAngle{m_player1.getRotation()};
           m_player1.pivot();
+          if (m_topBound.findIntersection(m_player1.getGlobalBounds()) ||
+              m_bottomBound.findIntersection(m_player1.getGlobalBounds()) ||
+              m_rightBound.findIntersection(m_player1.getGlobalBounds()) ||
+              m_leftBound.findIntersection(m_player1.getGlobalBounds())) {
+            m_player1.setRotation(oldAngle);
+            m_player1.setPosition(oldPos);
+          }
         }
       }
     }
@@ -130,8 +139,8 @@ public:
     }
 
     if (!m_player1.checkIniviciblity()) {
-      if (m_player1.getGlobalBounds().findIntersection(
-              m_ball.getGlobalBounds())) {
+      if (m_ball.getGlobalBounds().findIntersection(
+              m_player1.getGlobalBounds())) {
         m_player1.procIFrames();
         m_player1.minusLife();
         if (!m_player1.isAlive()) {

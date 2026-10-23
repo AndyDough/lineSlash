@@ -48,37 +48,37 @@ int main() {
 
     switch (currentState) {
     case GameState::starting_screen:
-      startScreen.update();
+      gameScreen.draw();
+      startScreen.draw();
       if (startScreen.isButtonPressed()) {
         currentState = GameState::running;
         continue;
       }
-      gameScreen.draw();
-      startScreen.draw();
+      startScreen.update();
       break;
     case GameState::hit:
-      hitScreen.update();
+      gameScreen.draw();
+      hitScreen.draw();
       if (hitScreen.isButtomPressed()) {
         currentState = GameState::running;
         continue;
       }
-      gameScreen.draw();
-      hitScreen.draw();
+      hitScreen.update();
       break;
     case GameState::game_over:
-      gameOverScreen.update();
+      gameScreen.draw();
+      gameOverScreen.draw();
       if (gameOverScreen.isButtomPressed()) {
         currentState = GameState::starting_screen;
         gameScreen.reset();
         gameScreen.update();
         continue;
       }
-      gameScreen.draw();
-      gameOverScreen.draw();
+      gameOverScreen.update();
       break;
     default:
-      gameScreen.update();
       gameScreen.draw();
+      gameScreen.update();
     }
 
     window.display();
