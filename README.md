@@ -47,6 +47,7 @@ roadmap:
 
   [ ] 17. Main Menu
     [ ] - Select between Single and Mulitplayer
+    [ ] - Refactor how code flow works between single and multi
 
   [ ] 18. Player 2
     [ ] - Adding a second player

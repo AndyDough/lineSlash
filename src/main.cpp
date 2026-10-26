@@ -1,8 +1,10 @@
 #include "Constants.h"
+#include "Screens/GameMode.h"
 #include "Screens/GameOverScreen.h"
 #include "Screens/GameScreen.h"
 #include "Screens/GameState.h"
 #include "Screens/HitScreen.h"
+#include "Screens/MenuScreen.h"
 #include "Screens/StartScreen.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
@@ -21,10 +23,12 @@
 #include <iostream>
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode(GlobalVar::windowSize), "My Window");
+  sf::RenderWindow window(sf::VideoMode(GlobalVar::windowSize), "Not Pong");
   window.setFramerateLimit(60);
 
   sf::Clock clock;
+  // Gamemode selection
+  GameMode currentGameMode;
 
   // Starting game state
   GameState currentState{GameState::starting_screen};
@@ -34,6 +38,7 @@ int main() {
   if (!font.openFromFile("./assets/font.ttf")) {
     std::cerr << "Failed to load font from file\n";
   }
+  MenuScreen menuScreen{window, font, currentGameMode};
   GameScreen gameScreen{window, currentState, font};
   StartScreen startScreen{window, font};
   HitScreen hitScreen{window, font};
