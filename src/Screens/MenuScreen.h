@@ -51,9 +51,9 @@ public:
       if (sf::Keyboard::isKeyPressed((sf::Keyboard::Key::Down))) {
         m_playerSelection = std::clamp(--m_playerSelection, 0, 2);
       }
-
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
         m_mode = static_cast<GameMode>(m_playerSelection);
+        m_choiceSelected = true;
       }
     }
   };
