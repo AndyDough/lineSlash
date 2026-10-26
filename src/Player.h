@@ -41,6 +41,9 @@ public:
   int getScore() const { return m_score; }
   void updateScore() { ++m_score; }
 
+  int getHighScore() const { return m_highScore; }
+  void updateHighScore() { m_highScore = std::max(m_score, m_highScore); }
+
   int getLives() const { return m_lives; }
   void minusLife() { --m_lives; }
   bool isAlive() const { return m_lives > 0; }

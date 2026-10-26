@@ -54,6 +54,8 @@ public:
     m_playArea.setOutlineColor(sf::Color::White);
     m_playArea.setOutlineThickness(10.0);
     m_playArea.setPosition(m_screenLeftCorner);
+
+    m_highScoreText.setFillColor(sf::Color::White);
   }
 
   void reset() {
@@ -73,6 +75,13 @@ public:
     m_scoreText.setPosition(sf::Vector2f{
         m_topBound.position.x +
             ((m_topBound.size.x - m_scoreText.getGlobalBounds().size.x) / 2.f),
+        m_topBound.position.y - 40.f});
+
+    m_highScoreText.setString(
+        std::format("High Score: {}", m_player1.getHighScore()));
+    m_highScoreText.setPosition(sf::Vector2f{
+        m_topBound.position.x +
+            (m_topBound.size.x - m_highScoreText.getGlobalBounds().size.x),
         m_topBound.position.y - 40.f});
     // check for closing window event
     while (const std::optional event = m_window.pollEvent()) {
@@ -127,6 +136,7 @@ public:
         m_player1.minusLife();
         if (!m_player1.isAlive()) {
           m_gameState = GameState::game_over;
+          m_player1.updateHighScore();
         } else {
           m_gameState = GameState::hit;
         }
@@ -140,6 +150,7 @@ public:
     m_window.draw(m_player1);
     m_window.draw(m_lineTipHitbox);
     if (m_gameState != GameState::game_over) {
+      m_window.draw(m_highScoreText);
       m_window.draw(m_scoreText);
       m_window.draw(m_livesText);
     }

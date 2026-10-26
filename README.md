@@ -43,7 +43,7 @@ roadmap:
 
   [x] 14. balance ball
   [ ] 15. Spawning multiple balls
-  [ ] 16. HighScore recorded
+  [x] 16. HighScore recorded
 
   [ ] 17. Main Menu
     [ ] - Select between Single and Mulitplayer
